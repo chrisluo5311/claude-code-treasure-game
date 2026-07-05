@@ -30,6 +30,8 @@ Follow these steps:
    If Pages is already enabled (409 error), that's fine — skip this step.
 
 6. **Verify and report**: Poll `gh api repos/{owner}/{repo}/pages` until `status` is `built` (it can take a minute or two), then clearly show me:
+   - Known failure mode: if the `pages build and deployment` workflow run fails at the deploy step with the generic error "Deployment failed, try again later" (check with `gh run view <id> --log-failed`), the `github-pages` deployment environment is stuck in a bad state. Fix it with `gh api -X DELETE repos/{owner}/{repo}/environments/github-pages` (it is auto-recreated), then trigger a new build with `gh api -X POST repos/{owner}/{repo}/pages/builds`.
+   - Also verify the live URL actually serves: `curl -s -o /dev/null -w "%{http_code}" <url>` should return 200.
    - ✅ The live URL: `https://<user>.github.io/<repo>/`
    - The repo URL and the Pages settings URL (`https://github.com/<user>/<repo>/settings/pages`)
 
